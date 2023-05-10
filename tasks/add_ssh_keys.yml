@@ -1,0 +1,9 @@
+---
+# task/add_ssh_keys file for provision_ansible_user
+- name: "Add key to authorized_keys"
+  ansible.posix.authorized_key:
+    user: "{{ provision_ansible_user_name }}"
+    key: "{{ provision_ansible_user_ssh_key }}"
+    comment: "{{ provision_ansible_user_name }}@{{ ansible_hostname }}"
+    key_options: "{{ provision_ansible_user_ssh_key_options }}"
+    exclusive: "{{ provision_ansible_user_ssh_key_exclusive }}"

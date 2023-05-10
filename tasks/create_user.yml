@@ -1,0 +1,27 @@
+---
+# task/create_user file for provision_ansible_user
+- name: "Create group {{ provision_ansible_user_group }}"
+  ansible.builtin.group:
+    name: "{{ provision_ansible_user_group }}"
+    state: present
+    system: "{{ provision_ansible_user_is_system }}"
+
+- name: "Create user {{ provision_ansible_user_name }}"
+  ansible.builtin.user:
+    name: "{{ provision_ansible_user_name }}"
+    comment: "Ansible service user"
+    password: "{{ provision_ansible_user_password }}"
+    group: "{{ provision_ansible_user_group }}"
+    home: "{{ provision_ansible_user_home }}"
+    shell: "{{ provision_ansible_user_shell }}"
+    system: "{{ provision_ansible_user_is_system }}"
+    create_home: true
+
+- name: "Add user to sudoers"
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/{{ provision_ansible_user_name }}"
+    owner: root
+    group: root
+    mode: 0640
+    content: "{{ provision_ansible_user_name }}  ALL=(ALL)  NOPASSWD: ALL"
+  when: provision_ansible_user_sudoer

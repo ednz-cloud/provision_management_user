@@ -1,2 +1,8 @@
 ---
 # task/main file for provision_management_user
+- name: "Import create_user.yml"
+  ansible.builtin.include_tasks: create_user.yml
+
+- name: "Import add_ssh_keys.yml"
+  ansible.builtin.include_tasks: add_ssh_keys.yml
+  when: provision_ansible_user_add_ssh_key

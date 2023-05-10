@@ -1,2 +1,13 @@
 ---
 # defaults file for provision_management_user
+provision_management_user_name: ansible
+provision_management_user_group: ansible
+provision_management_user_password: "*"
+provision_management_user_is_system: true
+provision_management_user_home: /opt/{{ provision_management_user_name }}
+provision_management_user_shell: /bin/bash
+provision_management_user_sudoer: false
+provision_management_user_add_ssh_key: false
+provision_management_user_ssh_key:
+provision_management_user_ssh_key_options: ""
+provision_management_user_ssh_key_exclusive: true
