@@ -1,2 +1,7 @@
 ---
 # handlers file for provision_management_user
+- name: "Restart sshd service"
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+  listen: "systemctl-restart-sshd"

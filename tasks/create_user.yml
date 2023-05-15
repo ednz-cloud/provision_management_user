@@ -9,7 +9,7 @@
 - name: "Create user {{ provision_management_user_name }}"
   ansible.builtin.user:
     name: "{{ provision_management_user_name }}"
-    comment: "Ansible service user"
+    comment: "Management user"
     password: "{{ provision_management_user_password }}"
     group: "{{ provision_management_user_group }}"
     home: "{{ provision_management_user_home }}"
