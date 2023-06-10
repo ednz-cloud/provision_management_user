@@ -18,10 +18,10 @@
     create_home: true
 
 - name: "Add user to sudoers"
-  ansible.builtin.copy:
-    dest: "/etc/sudoers.d/{{ provision_management_user_name }}"
-    owner: root
-    group: root
-    mode: 0640
-    content: "{{ provision_management_user_name }}  ALL=(ALL)  NOPASSWD: ALL"
+  community.general.sudoers:
+    name: "{{ provision_management_user_name }}"
+    user: "{{ provision_management_user_name }}"
+    commands: ALL
+    nopassword: true
+    setenv: true
   when: provision_management_user_sudoer
