@@ -24,7 +24,7 @@ def test_ubuntu_sudoer(host):
     assert etc_sudoers_d_ubuntu.user == "root"
     assert etc_sudoers_d_ubuntu.group == "root"
     assert etc_sudoers_d_ubuntu.mode == 0o440
-    assert etc_sudoers_d_ubuntu.contains("ubuntu  ALL=(ALL)  NOPASSWD: ALL")
+    assert etc_sudoers_d_ubuntu.contains("ubuntu ALL=NOPASSWD:SETENV: ALL")
 
 def test_ubuntu_ssh_authorized_keys(host):
     """Validate that ubuntu user has authorized_keys"""
