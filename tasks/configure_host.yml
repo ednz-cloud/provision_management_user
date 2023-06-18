@@ -2,22 +2,22 @@
 # task/configure_host file for provision_management_user
 - name: "Lock root password authentication"
   ansible.builtin.lineinfile:
-    dest=/etc/ssh/sshd_config
-    regexp='^PasswordAuthentication'
-    line="PasswordAuthentication no"
-    state=present
-    backup=yes
+    dest: /etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication'
+    line: "PasswordAuthentication no"
+    state: present
+    backup: yes
   notify:
     - systemctl-restart-sshd
   when: provision_management_user_disable_root_password_auth
 
 - name: "Lock root authentication"
   ansible.builtin.lineinfile:
-    dest=/etc/ssh/sshd_config
-    regexp='^PermitRootLogin'
-    line="PermitRootLogin no"
-    state=present
-    backup=yes
+    dest: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: "PermitRootLogin no"
+    state: present
+    backup: yes
   notify:
     - systemctl-restart-sshd
   when: provision_management_user_disable_root_login
