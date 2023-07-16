@@ -18,50 +18,50 @@
               - stat_etc_hosts.stat.pw_name == 'root'
               - stat_etc_hosts.stat.gr_name == 'root'
 
-    - name: "Test: ansible user and group"
+    - name: "Test: ubuntu user and group"
       block:
         - name: "Getent user ansible"
           ansible.builtin.getent:
             database: passwd
-            key: deploy
-          register: ansible_user
+            key: ubuntu
+          register: ednxzu_management_user
 
-        - name: "Getent group ansible"
+        - name: "Getent group ubuntu"
           ansible.builtin.getent:
             database: group
-            key: deploy
-          register: ansible_group
+            key: ubuntu
+          register: ednxzu_management_group
 
-        - name: "Verify ansible user and group"
+        - name: "Verify ubuntu user and group"
           ansible.builtin.assert:
             that:
-              - not ansible_user.failed
-              - not ansible_group.failed
-              - "'deploy' in ansible_user.ansible_facts.getent_passwd.keys()"
-              - "'/opt/deploy' in ansible_user.ansible_facts.getent_passwd['deploy']"
-              - "'/bin/bash' in ansible_user.ansible_facts.getent_passwd['deploy']"
-              - "'deploy' in ansible_group.ansible_facts.getent_group.keys()"
+              - not ednxzu_management_user.failed
+              - not ednxzu_management_group.failed
+              - "'ubuntu' in ednxzu_management_user.ansible_facts.getent_passwd.keys()"
+              - "'/home/ubuntu' in ednxzu_management_user.ansible_facts.getent_passwd['ubuntu']"
+              - "'/bin/bash' in ednxzu_management_user.ansible_facts.getent_passwd['ubuntu']"
+              - "'ubuntu' in ednxzu_management_group.ansible_facts.getent_group.keys()"
 
-    - name: "Test: ansible sudo permissions"
+    - name: "Test: ubuntu sudo permissions"
       block:
-        - name: "Stat file /etc/sudoers.d/deploy"
+        - name: "Stat file /etc/sudoers.d/ubuntu"
           ansible.builtin.stat:
-            path: "/etc/sudoers.d"
-          register: stat_etc_sudoers_d_ansible
+            path: "/etc/sudoers.d/ubuntu"
+          register: stat_etc_sudoers_d_ubuntu
 
-        - name: "Verify file /etc/sudoers.d/deploy"
+        - name: "Verify file /etc/sudoers.d/ubuntu"
           ansible.builtin.assert:
             that:
-              - not stat_etc_sudoers_d_ansible.stat.exists
+              - not stat_etc_sudoers_d_ubuntu.stat.exists
 
-    - name: "Test: ansible authorized_keys"
+    - name: "Test: ubuntu authorized_keys"
       block:
-        - name: "Stat file /opt/deploy/.ssh/authorized_keys"
+        - name: "Stat file /home/ubuntu/.ssh/authorized_keys"
           ansible.builtin.stat:
-            path: "/opt/deploy/.ssh/authorized_keys"
-          register: stat_opt_ansible_ssh_authorized_keys
+            path: "/home/ubuntu/.ssh/authorized_keys"
+          register: stat_home_ubuntu_ssh_authorized_keys
 
-        - name: "Verify file /opt/deploy/.ssh/authorized_keys"
+        - name: "Verify file /home/ubuntu/.ssh/authorized_keys"
           ansible.builtin.assert:
             that:
-              - not stat_opt_ansible_ssh_authorized_keys.stat.exists
+              - not stat_home_ubuntu_ssh_authorized_keys.stat.exists

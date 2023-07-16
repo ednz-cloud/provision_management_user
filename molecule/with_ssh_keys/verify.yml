@@ -23,45 +23,65 @@
         - name: "Getent user ansible"
           ansible.builtin.getent:
             database: passwd
-            key: deploy
-          register: ansible_user
+            key: ansible
+          register: ednxzu_ansible_user
 
         - name: "Getent group ansible"
           ansible.builtin.getent:
             database: group
-            key: deploy
-          register: ansible_group
+            key: ansible
+          register: ednxzu_ansible_group
 
         - name: "Verify ansible user and group"
           ansible.builtin.assert:
             that:
-              - not ansible_user.failed
-              - not ansible_group.failed
-              - "'deploy' in ansible_user.ansible_facts.getent_passwd.keys()"
-              - "'/opt/deploy' in ansible_user.ansible_facts.getent_passwd['deploy']"
-              - "'/bin/bash' in ansible_user.ansible_facts.getent_passwd['deploy']"
-              - "'deploy' in ansible_group.ansible_facts.getent_group.keys()"
+              - not ednxzu_ansible_user.failed
+              - not ednxzu_ansible_group.failed
+              - "'ansible' in ednxzu_ansible_user.ansible_facts.getent_passwd.keys()"
+              - "'/opt/ansible' in ednxzu_ansible_user.ansible_facts.getent_passwd['ansible']"
+              - "'/bin/bash' in ednxzu_ansible_user.ansible_facts.getent_passwd['ansible']"
+              - "'ansible' in ednxzu_ansible_group.ansible_facts.getent_group.keys()"
 
     - name: "Test: ansible sudo permissions"
       block:
-        - name: "Stat file /etc/sudoers.d/deploy"
+        - name: "Stat file /etc/sudoers.d/ansible"
           ansible.builtin.stat:
-            path: "/etc/sudoers.d"
+            path: "/etc/sudoers.d/ansible"
           register: stat_etc_sudoers_d_ansible
 
-        - name: "Verify file /etc/sudoers.d/deploy"
+        - name: "Slurp file /etc/sudoers.d/ansible"
+          ansible.builtin.slurp:
+            src: "/etc/sudoers.d/ansible"
+          register: slurp_etc_sudoers_d_ansible
+
+        - name: "Verify file /etc/sudoers.d/ansible"
           ansible.builtin.assert:
             that:
-              - not stat_etc_sudoers_d_ansible.stat.exists
+              - stat_etc_sudoers_d_ansible.stat.exists
+              - stat_etc_sudoers_d_ansible.stat.isreg
+              - stat_etc_sudoers_d_ansible.stat.pw_name == 'root'
+              - stat_etc_sudoers_d_ansible.stat.gr_name == 'root'
+              - stat_etc_sudoers_d_ansible.stat.mode == '0440'
+              - "'ansible ALL=NOPASSWD:SETENV: ALL' in (slurp_etc_sudoers_d_ansible.content|b64decode)"
 
     - name: "Test: ansible authorized_keys"
       block:
-        - name: "Stat file /opt/deploy/.ssh/authorized_keys"
+        - name: "Stat file /opt/ansible/.ssh/authorized_keys"
           ansible.builtin.stat:
-            path: "/opt/deploy/.ssh/authorized_keys"
+            path: "/opt/ansible/.ssh/authorized_keys"
           register: stat_opt_ansible_ssh_authorized_keys
 
-        - name: "Verify file /opt/deploy/.ssh/authorized_keys"
+        - name: "Slurp file /opt/ansible/.ssh/authorized_keys"
+          ansible.builtin.slurp:
+            src: "/opt/ansible/.ssh/authorized_keys"
+          register: slurp_opt_ansible_ssh_authorized_keys
+
+        - name: "Verify file /opt/ansible/.ssh/authorized_keys"
           ansible.builtin.assert:
             that:
-              - not stat_opt_ansible_ssh_authorized_keys.stat.exists
+              - stat_opt_ansible_ssh_authorized_keys.stat.exists
+              - stat_opt_ansible_ssh_authorized_keys.stat.isreg
+              - stat_opt_ansible_ssh_authorized_keys.stat.pw_name == 'ansible'
+              - stat_opt_ansible_ssh_authorized_keys.stat.gr_name == 'ansible'
+              - stat_opt_ansible_ssh_authorized_keys.stat.mode == '0600'
+              - "'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIClfmTk73wNNL2jwvhRUmUuy80JRrz3P7cEgXUqlc5O9 ansible@instance' in (slurp_opt_ansible_ssh_authorized_keys.content|b64decode)"
