@@ -13,6 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Publish
-        uses: ednxzu/galaxy-import-role@v1.0.0
+        uses: ednxzu/galaxy-import-role@v1
         with:
           galaxy-api-key: ${{ secrets.GALAXY_API_TOKEN }}
