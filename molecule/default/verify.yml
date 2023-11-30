@@ -48,6 +48,7 @@
           ansible.builtin.stat:
             path: "/etc/sudoers.d/ubuntu"
           register: stat_etc_sudoers_d_ubuntu
+          become: true
 
         - name: "Verify file /etc/sudoers.d/ubuntu"
           ansible.builtin.assert:
@@ -60,6 +61,7 @@
           ansible.builtin.stat:
             path: "/home/ubuntu/.ssh/authorized_keys"
           register: stat_home_ubuntu_ssh_authorized_keys
+          become: true
 
         - name: "Verify file /home/ubuntu/.ssh/authorized_keys"
           ansible.builtin.assert:

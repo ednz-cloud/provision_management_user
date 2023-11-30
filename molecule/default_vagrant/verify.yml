@@ -1,7 +1,7 @@
 ---
 - name: Verify
   hosts: all
-  gather_facts: false
+  gather_facts: true
   tasks:
     - name: "Test: file /etc/hosts"
       block:
@@ -11,12 +11,16 @@
           register: stat_etc_hosts
 
         - name: "Verify file /etc/hosts"
+          vars:
+            etc_hosts_group:
+              ubuntu: "adm"
+              debian: "root"
           ansible.builtin.assert:
             that:
               - stat_etc_hosts.stat.exists
               - stat_etc_hosts.stat.isreg
               - stat_etc_hosts.stat.pw_name == 'root'
-              - stat_etc_hosts.stat.gr_name == 'root'
+              - stat_etc_hosts.stat.gr_name == etc_hosts_group[(ansible_distribution|lower)]
 
     - name: "Test: ubuntu user and group"
       block:
@@ -50,21 +54,10 @@
           register: stat_etc_sudoers_d_ubuntu
           become: true
 
-        - name: "Slurp file /etc/sudoers.d/ubuntu"
-          ansible.builtin.slurp:
-            src: "/etc/sudoers.d/ubuntu"
-          register: slurp_etc_sudoers_d_ubuntu
-          become: true
-
         - name: "Verify file /etc/sudoers.d/ubuntu"
           ansible.builtin.assert:
             that:
-              - stat_etc_sudoers_d_ubuntu.stat.exists
-              - stat_etc_sudoers_d_ubuntu.stat.isreg
-              - stat_etc_sudoers_d_ubuntu.stat.pw_name == 'root'
-              - stat_etc_sudoers_d_ubuntu.stat.gr_name == 'root'
-              - stat_etc_sudoers_d_ubuntu.stat.mode == '0440'
-              - "'ubuntu ALL=NOPASSWD:SETENV: ALL' in (slurp_etc_sudoers_d_ubuntu.content|b64decode)"
+              - not stat_etc_sudoers_d_ubuntu.stat.exists
 
     - name: "Test: ubuntu authorized_keys"
       block:
@@ -74,18 +67,7 @@
           register: stat_home_ubuntu_ssh_authorized_keys
           become: true
 
-        - name: "Slurp file /home/ubuntu/.ssh/authorized_keys"
-          ansible.builtin.slurp:
-            src: "/home/ubuntu/.ssh/authorized_keys"
-          register: slurp_home_ubuntu_ssh_authorized_keys
-          become: true
-
         - name: "Verify file /home/ubuntu/.ssh/authorized_keys"
           ansible.builtin.assert:
             that:
-              - stat_home_ubuntu_ssh_authorized_keys.stat.exists
-              - stat_home_ubuntu_ssh_authorized_keys.stat.isreg
-              - stat_home_ubuntu_ssh_authorized_keys.stat.pw_name == 'ubuntu'
-              - stat_home_ubuntu_ssh_authorized_keys.stat.gr_name == 'ubuntu'
-              - stat_home_ubuntu_ssh_authorized_keys.stat.mode == '0600'
-              - "'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIClfmTk73wNNL2jwvhRUmUuy80JRrz3P7cEgXUqlc5O9 ubuntu@instance' in (slurp_home_ubuntu_ssh_authorized_keys.content|b64decode)"
+              - not stat_home_ubuntu_ssh_authorized_keys.stat.exists

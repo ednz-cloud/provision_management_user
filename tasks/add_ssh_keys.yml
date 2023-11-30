@@ -7,3 +7,4 @@
     comment: "{{ provision_management_user_name }}@{{ ansible_hostname }}"
     key_options: "{{ provision_management_user_ssh_key_options }}"
     exclusive: "{{ provision_management_user_ssh_key_exclusive }}"
+  become: true
