@@ -10,7 +10,6 @@
   notify:
     - systemctl-restart-sshd
   when: provision_management_user_disable_root_password_auth
-  
 
 - name: "Lock root authentication"
   ansible.builtin.lineinfile:
@@ -22,4 +21,3 @@
   notify:
     - systemctl-restart-sshd
   when: provision_management_user_disable_root_login
-  
