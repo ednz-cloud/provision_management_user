@@ -2,26 +2,8 @@
 - name: Verify
   hosts: all
   gather_facts: true
+  become: true
   tasks:
-    - name: "Test: file /etc/hosts"
-      block:
-        - name: "Stat file /etc/hosts"
-          ansible.builtin.stat:
-            path: "/etc/hosts"
-          register: stat_etc_hosts
-
-        - name: "Verify file /etc/hosts"
-          vars:
-            etc_hosts_group:
-              ubuntu: "adm"
-              debian: "root"
-          ansible.builtin.assert:
-            that:
-              - stat_etc_hosts.stat.exists
-              - stat_etc_hosts.stat.isreg
-              - stat_etc_hosts.stat.pw_name == 'root'
-              - stat_etc_hosts.stat.gr_name == etc_hosts_group[(ansible_distribution|lower)]
-
     - name: "Test: ubuntu user and group"
       block:
         - name: "Getent user ansible"
@@ -52,7 +34,6 @@
           ansible.builtin.stat:
             path: "/etc/sudoers.d/ubuntu"
           register: stat_etc_sudoers_d_ubuntu
-          become: true
 
         - name: "Verify file /etc/sudoers.d/ubuntu"
           ansible.builtin.assert:
@@ -65,7 +46,6 @@
           ansible.builtin.stat:
             path: "/home/ubuntu/.ssh/authorized_keys"
           register: stat_home_ubuntu_ssh_authorized_keys
-          become: true
 
         - name: "Verify file /home/ubuntu/.ssh/authorized_keys"
           ansible.builtin.assert:

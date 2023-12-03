@@ -1,6 +1,7 @@
 ---
 - name: Converge
   hosts: all
+  become: true
   tasks:
     - name: "Include ednxzu.provision_management_user"
       ansible.builtin.include_role:
