@@ -10,23 +10,23 @@
           ansible.builtin.getent:
             database: passwd
             key: ubuntu
-          register: ednxzu_management_user
+          register: ednz_cloud_management_user
 
         - name: "Getent group ubuntu"
           ansible.builtin.getent:
             database: group
             key: ubuntu
-          register: ednxzu_management_group
+          register: ednz_cloud_management_group
 
         - name: "Verify ubuntu user and group"
           ansible.builtin.assert:
             that:
-              - not ednxzu_management_user.failed
-              - not ednxzu_management_group.failed
-              - "'ubuntu' in ednxzu_management_user.ansible_facts.getent_passwd.keys()"
-              - "'/home/ubuntu' in ednxzu_management_user.ansible_facts.getent_passwd['ubuntu']"
-              - "'/bin/bash' in ednxzu_management_user.ansible_facts.getent_passwd['ubuntu']"
-              - "'ubuntu' in ednxzu_management_group.ansible_facts.getent_group.keys()"
+              - not ednz_cloud_management_user.failed
+              - not ednz_cloud_management_group.failed
+              - "'ubuntu' in ednz_cloud_management_user.ansible_facts.getent_passwd.keys()"
+              - "'/home/ubuntu' in ednz_cloud_management_user.ansible_facts.getent_passwd['ubuntu']"
+              - "'/bin/bash' in ednz_cloud_management_user.ansible_facts.getent_passwd['ubuntu']"
+              - "'ubuntu' in ednz_cloud_management_group.ansible_facts.getent_group.keys()"
 
     - name: "Test: ubuntu sudo permissions"
       block:

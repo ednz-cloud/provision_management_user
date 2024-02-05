@@ -1,12 +1,12 @@
 ---
 # meta file for provision_ansible_user
 galaxy_info:
-  namespace: 'ednxzu'
-  role_name: 'provision_management_user'
-  author: 'Bertrand Lanson'
-  description: 'Deploy the management user on debian-based distros.'
-  license: 'license (BSD, MIT)'
-  min_ansible_version: '2.10'
+  namespace: "ednz_cloud"
+  role_name: "provision_management_user"
+  author: "Bertrand Lanson"
+  description: "Deploy the management user on debian-based distros."
+  license: "license (BSD, MIT)"
+  min_ansible_version: "2.10"
   platforms:
     - name: Ubuntu
       versions:
@@ -17,10 +17,10 @@ galaxy_info:
         - bullseye
         - bookworm
   galaxy_tags:
-    - 'ubuntu'
-    - 'debian'
-    - 'management'
-    - 'user'
-    - 'provisioning'
+    - "ubuntu"
+    - "debian"
+    - "management"
+    - "user"
+    - "provisioning"
 
 dependencies: []
